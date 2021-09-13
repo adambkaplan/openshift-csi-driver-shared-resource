@@ -72,7 +72,7 @@ verify: ## Run verifications. Example: make verify
 .PHONY: verify
 
 build: ## Build the executable. Example: make build
-	go build -a -mod=vendor -race -ldflags $(LDFLAGS) -o _output/csi-driver-shared-resource ./cmd
+	go build -a -mod=vendor -ldflags $(LDFLAGS) -o _output/csi-driver-shared-resource ./cmd
 .PHONY: build
 
 build-image: ## Build the images and push them to the remote registry. Example: make build-image
