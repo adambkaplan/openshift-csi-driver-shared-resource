@@ -22,7 +22,20 @@ TEST_SUITE ?= normal
 # ent-to-end test timeout
 TEST_TIMEOUT ?= 30m
 
+# current architecture short name
+UNAME := $(shell uname -m)
+# golang race flag
+RACE ?= -race
+# golang build flags
+GO_FLAGS ?= -a -mod=vendor $(RACE)
 LDFLAGS ?= '-extldflags "-static"'
+
+# race flag is not supported on s390x and ppc64le architectures
+ifeq ($(UNAME), s390x)
+	RACE =
+else ifeq ($(UNAME), ppc64le)
+	RACE =
+endif
 
 .DEFAULT_GOAL := help
 
@@ -72,7 +85,7 @@ verify: ## Run verifications. Example: make verify
 .PHONY: verify
 
 build: ## Build the executable. Example: make build
-	go build -a -mod=vendor -ldflags $(LDFLAGS) -o _output/csi-driver-shared-resource ./cmd
+	go build $(GO_FLAGS) -ldflags $(LDFLAGS) -o _output/csi-driver-shared-resource ./cmd
 .PHONY: build
 
 build-image: ## Build the images and push them to the remote registry. Example: make build-image
